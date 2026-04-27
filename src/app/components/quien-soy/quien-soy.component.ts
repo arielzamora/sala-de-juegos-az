@@ -10,11 +10,11 @@ import { GithubService } from '../../services/github.service';
   styleUrl: './quien-soy.component.css'
 })
 export class QuienSoyComponent implements OnInit {
-  githubUsername = 'octocat'; // Reemplazar con el usuario real de GitHub
+  githubUsername = 'arielzamora'; // Reemplazar con el usuario real de GitHub
   userProfile: any = null;
   loading = true;
 
-  constructor(private githubService: GithubService) {}
+  constructor(private githubService: GithubService) { }
 
   ngOnInit() {
     this.githubService.getUserProfile(this.githubUsername).subscribe({
