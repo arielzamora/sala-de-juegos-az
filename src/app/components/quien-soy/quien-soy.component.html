@@ -1,0 +1,58 @@
+<div class="container py-5">
+  <div class="row g-4">
+    <!-- Perfil de GitHub -->
+    <div class="col-md-5">
+      <div class="premium-card p-4 h-100 text-center">
+        <h3 class="mb-4 text-gradient">Desarrollador</h3>
+        
+        <div *ngIf="loading" class="spinner-border text-info my-5" role="status">
+          <span class="visually-hidden">Cargando perfil...</span>
+        </div>
+        
+        <div *ngIf="!loading && userProfile" class="profile-info">
+          <img [src]="userProfile.avatar_url" alt="Avatar" class="img-fluid rounded-circle mb-3 shadow" style="width: 150px; height: 150px; border: 3px solid #00ff88;">
+          <h4 class="fw-bold">{{ userProfile.name || userProfile.login }}</h4>
+          <p class="text-secondary">{{ userProfile.bio || 'Desarrollador de software apasionado.' }}</p>
+          
+          <div class="d-flex justify-content-center gap-3 mt-4">
+            <div class="text-center">
+              <span class="fs-4 fw-bold text-white">{{ userProfile.public_repos }}</span>
+              <span class="d-block text-secondary small">Repos</span>
+            </div>
+            <div class="text-center">
+              <span class="fs-4 fw-bold text-white">{{ userProfile.followers }}</span>
+              <span class="d-block text-secondary small">Seguidores</span>
+            </div>
+          </div>
+          <a [href]="userProfile.html_url" target="_blank" class="btn btn-outline-info mt-4 rounded-pill px-4">Ver en GitHub</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Documentación Juego Propio -->
+    <div class="col-md-7">
+      <div class="premium-card p-4 h-100 text-start">
+        <h3 class="mb-4 text-gradient">Juego Propio: [Nombre del Juego]</h3>
+        
+        <div class="documentation-placeholder">
+          <h5 class="fw-bold text-info mt-4">Descripción</h5>
+          <p class="text-secondary mb-4">
+            [Placeholder] Describe aquí brevemente de qué trata tu juego. ¿Cuál es el objetivo principal y cómo se gana?
+          </p>
+
+          <h5 class="fw-bold text-info">Reglas del Juego</h5>
+          <ul class="text-secondary mb-4 list-group list-group-flush bg-transparent">
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">1. [Regla 1: ej. El jugador debe...]</li>
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">2. [Regla 2: ej. Si sucede X, entonces Y...]</li>
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">3. [Regla 3: ej. El juego termina cuando...]</li>
+          </ul>
+
+          <h5 class="fw-bold text-info mt-4">Detalles Técnicos</h5>
+          <p class="text-secondary">
+            [Placeholder] Menciona brevemente si utilizaste alguna estructura de datos particular, animaciones, o lógica especial para implementar este juego en Angular 17+ y Standalone Components.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

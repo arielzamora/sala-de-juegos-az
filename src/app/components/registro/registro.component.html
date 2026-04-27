@@ -1,0 +1,28 @@
+<div class="container d-flex justify-content-center align-items-center py-5">
+  <div class="premium-card p-5" style="max-width: 450px; width: 100%;">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">Crear Cuenta</h2>
+      <p class="text-secondary">Regístrate para comenzar a jugar</p>
+    </div>
+
+    <form (ngSubmit)="onRegister()">
+      <div class="mb-3">
+        <label for="reg-email" class="form-label">Correo Electrónico</label>
+        <input type="email" class="form-control bg-dark text-white border-secondary" id="reg-email" [(ngModel)]="email" name="email" placeholder="ejemplo@correo.com" required>
+      </div>
+      <div class="mb-3">
+        <label for="reg-pass" class="form-label">Contraseña</label>
+        <input type="password" class="form-control bg-dark text-white border-secondary" id="reg-pass" [(ngModel)]="pass" name="pass" placeholder="Mínimo 6 caracteres" required minlength="6">
+      </div>
+      <div class="mb-4">
+        <label for="reg-confirm" class="form-label">Confirmar Contraseña</label>
+        <input type="password" class="form-control bg-dark text-white border-secondary" id="reg-confirm" [(ngModel)]="confirmPass" name="confirmPass" placeholder="Repite la contraseña" required>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 py-2" [disabled]="isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Registrarse
+      </button>
+    </form>
+  </div>
+</div>

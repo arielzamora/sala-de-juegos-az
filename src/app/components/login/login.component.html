@@ -1,0 +1,28 @@
+<div class="container d-flex justify-content-center align-items-center py-5">
+  <div class="premium-card p-5" style="max-width: 450px; width: 100%;">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">Iniciar Sesión</h2>
+      <p class="text-secondary">Ingresa a tu cuenta para jugar</p>
+    </div>
+
+    <form (ngSubmit)="onLogin()">
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo Electrónico</label>
+        <input type="email" class="form-control bg-dark text-white border-secondary" id="email" [(ngModel)]="email" name="email" placeholder="ejemplo@correo.com" required>
+      </div>
+      <div class="mb-4">
+        <label for="pass" class="form-label">Contraseña</label>
+        <input type="password" class="form-control bg-dark text-white border-secondary" id="pass" [(ngModel)]="pass" name="pass" placeholder="******" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 py-2 mb-3" [disabled]="isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Ingresar
+      </button>
+
+      <button type="button" class="btn btn-outline-info w-100 py-2" (click)="fillAdmin()" [disabled]="isLoading">
+        Acceso Rápido (Admin)
+      </button>
+    </form>
+  </div>
+</div>
