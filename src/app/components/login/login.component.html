@@ -9,20 +9,22 @@
       <div class="mb-3">
         <label for="email" class="form-label">Correo Electrónico</label>
         <input type="email" class="form-control bg-dark text-white border-secondary" id="email" formControlName="email" placeholder="ejemplo@correo.com">
-        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger small mt-1">
-          Correo inválido.
-        </div>
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <div class="text-danger small mt-1">Correo inválido.</div>
+        }
       </div>
       <div class="mb-4">
         <label for="pass" class="form-label">Contraseña</label>
         <input type="password" class="form-control bg-dark text-white border-secondary" id="pass" formControlName="pass" placeholder="******">
-        <div *ngIf="loginForm.get('pass')?.invalid && loginForm.get('pass')?.touched" class="text-danger small mt-1">
-          Contraseña requerida.
-        </div>
+        @if (loginForm.get('pass')?.invalid && loginForm.get('pass')?.touched) {
+          <div class="text-danger small mt-1">Contraseña requerida.</div>
+        }
       </div>
 
       <button type="submit" class="btn btn-primary w-100 py-2 mb-4" [disabled]="isLoading || loginForm.invalid">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        }
         Ingresar
       </button>
 
