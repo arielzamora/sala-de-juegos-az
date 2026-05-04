@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Injectable, signal } from '@angular/core';
+import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -7,23 +7,48 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   private supabase: SupabaseClient;
+  public currentUser = signal<User | null>(null);
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    
+    // Check initial session
+    this.supabase.auth.getSession().then(({ data: { session } }) => {
+      this.currentUser.set(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      this.currentUser.set(session?.user ?? null);
+    });
   }
 
-  // Replaces createUserWithEmailAndPassword
-  async registeruser(email: string, pass: string) {
+  // Lógica doble: Registro en Auth + Inserción en DB 'usuarios'
+  async registeruser(email: string, pass: string, nombre: string, apellido: string, edad: number) {
     const { data, error } = await this.supabase.auth.signUp({
       email: email,
       password: pass,
     });
     
     if (error) throw error;
+    
+    if (data.user) {
+      const { error: dbError } = await this.supabase.from('usuarios').insert({
+        id: data.user.id,
+        nombre: nombre,
+        apellido: apellido,
+        edad: edad
+      });
+      
+      if (dbError) {
+        console.error("Error guardando datos adicionales", dbError);
+        throw new Error("Usuario creado en auth pero falló al guardar datos extra.");
+      }
+    }
+
     return data;
   }
 
-  // Replaces signInWithEmailAndPassword
   async login(email: string, pass: string) {
     const { data, error } = await this.supabase.auth.signInWithPassword({
       email: email,
@@ -34,24 +59,11 @@ export class AuthService {
     return data;
   }
 
-  // Replaces signOut
   async logout() {
     const { error } = await this.supabase.auth.signOut();
     if (error) throw error;
   }
 
-  // Obtains user data if logged in
-  async getAuth() {
-    const { data: { user } } = await this.supabase.auth.getUser();
-    return user;
-  }
-  
-  // Realtime subscription to auth state changes (optional, similar to authState observable)
-  onAuthStateChange(callback: (event: string, session: any) => void) {
-    return this.supabase.auth.onAuthStateChange(callback);
-  }
-
-  // Replaces updateProfile
   async updateProfile(newName: string, photoURL: string) {
     const { data, error } = await this.supabase.auth.updateUser({
       data: {

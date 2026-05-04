@@ -1,22 +1,52 @@
 <div class="container d-flex justify-content-center align-items-center py-5">
-  <div class="premium-card p-5" style="max-width: 450px; width: 100%;">
-    <div class="text-center mb-4">
+  <div class="premium-card p-4" style="max-width: 500px; width: 100%;">
+    <div class="text-center mb-3">
       <h2 class="fw-bold">Crear Cuenta</h2>
-      <p class="text-secondary">Regístrate para comenzar a jugar</p>
+      <p class="text-secondary m-0">Regístrate para comenzar a jugar</p>
     </div>
 
-    <form (ngSubmit)="onRegister()">
-      <div class="mb-3">
-        <label for="reg-email" class="form-label">Correo Electrónico</label>
-        <input type="email" class="form-control bg-dark text-white border-secondary" id="reg-email" [(ngModel)]="email" name="email" placeholder="ejemplo@correo.com" required>
+    <form [formGroup]="registroForm" (ngSubmit)="onRegister()">
+      
+      <!-- Fila Nombre y Apellido -->
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <label for="nombre" class="form-label small mb-1">Nombre</label>
+          <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="nombre" formControlName="nombre">
+          <div *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" class="text-danger small mt-1">Requerido (min 2).</div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <label for="apellido" class="form-label small mb-1">Apellido</label>
+          <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" id="apellido" formControlName="apellido">
+          <div *ngIf="registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched" class="text-danger small mt-1">Requerido (min 2).</div>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="reg-pass" class="form-label">Contraseña</label>
-        <input type="password" class="form-control bg-dark text-white border-secondary" id="reg-pass" [(ngModel)]="pass" name="pass" placeholder="Mínimo 6 caracteres" required minlength="6">
+
+      <!-- Fila Edad y Correo -->
+      <div class="row">
+        <div class="col-md-4 mb-2">
+          <label for="edad" class="form-label small mb-1">Edad</label>
+          <input type="number" class="form-control form-control-sm bg-dark text-white border-secondary" id="edad" formControlName="edad">
+          <div *ngIf="registroForm.get('edad')?.invalid && registroForm.get('edad')?.touched" class="text-danger small mt-1">Mínimo 18 años.</div>
+        </div>
+        <div class="col-md-8 mb-2">
+          <label for="reg-email" class="form-label small mb-1">Correo Electrónico</label>
+          <input type="email" class="form-control form-control-sm bg-dark text-white border-secondary" id="reg-email" formControlName="email">
+          <div *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" class="text-danger small mt-1">Correo inválido.</div>
+        </div>
       </div>
+
+      <div class="mb-2">
+        <label for="reg-pass" class="form-label small mb-1">Contraseña</label>
+        <input type="password" class="form-control form-control-sm bg-dark text-white border-secondary" id="reg-pass" formControlName="pass" placeholder="Mínimo 6 caracteres">
+        <div *ngIf="registroForm.get('pass')?.invalid && registroForm.get('pass')?.touched" class="text-danger small mt-1">Mínimo 6 caracteres.</div>
+      </div>
+      
       <div class="mb-4">
-        <label for="reg-confirm" class="form-label">Confirmar Contraseña</label>
-        <input type="password" class="form-control bg-dark text-white border-secondary" id="reg-confirm" [(ngModel)]="confirmPass" name="confirmPass" placeholder="Repite la contraseña" required>
+        <label for="reg-confirm" class="form-label small mb-1">Confirmar Contraseña</label>
+        <input type="password" class="form-control form-control-sm bg-dark text-white border-secondary" id="reg-confirm" formControlName="confirmPass">
+        <div *ngIf="registroForm.errors?.['passwordsMismatch'] && (registroForm.get('confirmPass')?.touched || registroForm.get('pass')?.touched)" class="text-danger small mt-1">
+          Las contraseñas no coinciden.
+        </div>
       </div>
 
       <button type="submit" class="btn btn-success w-100 py-2" [disabled]="isLoading">
