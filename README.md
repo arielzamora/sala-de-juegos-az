@@ -1,6 +1,6 @@
 # Sala de Juegos
 
-🌍 **Sitio web en vivo (Azure Static Web Apps):** [https://orange-ground-0b3278710.7.azurestaticapps.net](https://orange-ground-0b3278710.7.azurestaticapps.net/home)
+🌍 **Sitio web en vivo (Azure Static Web Apps):** [https://orange-ground-0b3278710.7.azurestaticapps.net](https://orange-ground-0b3278710.7.azurestaticapps.net/)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
 
