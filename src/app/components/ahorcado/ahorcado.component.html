@@ -1,0 +1,94 @@
+<div class="container py-4">
+  <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3 mb-4">
+    ← Volver al Inicio
+  </a>
+  <div class="row g-4 justify-content-center">
+    
+    <!-- Panel izquierdo: SVG del ahorcado + palabra -->
+    <div class="col-md-5">
+      <div class="premium-card p-4 text-center h-100">
+        <h2 class="fw-bold text-gradient mb-3">Ahorcado</h2>
+
+        <!-- SVG Progresivo del ahorcado -->
+        <svg viewBox="0 0 200 250" class="hangman-svg">
+          <!-- Estructura (siempre visible) -->
+          <line x1="20" y1="240" x2="180" y2="240" stroke="#aaa" stroke-width="4"/>
+          <line x1="60" y1="240" x2="60" y2="20" stroke="#aaa" stroke-width="4"/>
+          <line x1="60" y1="20" x2="130" y2="20" stroke="#aaa" stroke-width="4"/>
+          <line x1="130" y1="20" x2="130" y2="50" stroke="#aaa" stroke-width="4"/>
+          <!-- Cabeza (error >= 1) -->
+          @if (errores >= 1) {
+            <circle cx="130" cy="70" r="20" stroke="#ff4444" stroke-width="3" fill="none"/>
+          }
+          <!-- Cuerpo (error >= 2) -->
+          @if (errores >= 2) {
+            <line x1="130" y1="90" x2="130" y2="150" stroke="#ff4444" stroke-width="3"/>
+          }
+          <!-- Brazo izquierdo (error >= 3) -->
+          @if (errores >= 3) {
+            <line x1="130" y1="110" x2="100" y2="135" stroke="#ff4444" stroke-width="3"/>
+          }
+          <!-- Brazo derecho (error >= 4) -->
+          @if (errores >= 4) {
+            <line x1="130" y1="110" x2="160" y2="135" stroke="#ff4444" stroke-width="3"/>
+          }
+          <!-- Pierna izquierda (error >= 5) -->
+          @if (errores >= 5) {
+            <line x1="130" y1="150" x2="100" y2="190" stroke="#ff4444" stroke-width="3"/>
+          }
+          <!-- Pierna derecha (error >= 6) -->
+          @if (errores >= 6) {
+            <line x1="130" y1="150" x2="160" y2="190" stroke="#ff4444" stroke-width="3"/>
+          }
+        </svg>
+
+        <!-- Intentos restantes -->
+        <p class="text-secondary mt-2">
+          Intentos restantes: 
+          <span class="fw-bold" [class.text-danger]="intentosRestantes <= 2" [class.text-warning]="intentosRestantes === 3" [class.text-success]="intentosRestantes > 3">
+            {{ intentosRestantes }} / {{ MAX_INTENTOS }}
+          </span>
+        </p>
+
+        <!-- Palabra oculta -->
+        <div class="palabra-container d-flex justify-content-center gap-2 flex-wrap my-4">
+          @for (letra of palabraMostrada; track $index) {
+            <div class="letra-slot">
+              <span class="text-white fw-bold fs-3">{{ letra }}</span>
+              <div class="letra-underline"></div>
+            </div>
+          }
+        </div>
+
+        <button class="btn btn-outline-secondary rounded-pill px-4 mt-2" (click)="nuevaPartida()">
+          🔄 Nueva Partida
+        </button>
+      </div>
+    </div>
+
+    <!-- Panel derecho: Teclado virtual -->
+    <div class="col-md-5">
+      <div class="premium-card p-4 h-100">
+        <h5 class="text-secondary text-center mb-3">Seleccioná una letra</h5>
+        <div class="teclado-grid">
+          @for (letra of ABECEDARIO; track letra) {
+            <button
+              class="btn btn-teclado"
+              [class.usado-correcto]="letrasUsadas.includes(letra) && palabra.includes(letra)"
+              [class.usado-incorrecto]="letrasUsadas.includes(letra) && !palabra.includes(letra)"
+              [disabled]="letrasUsadas.includes(letra) || juegoTerminado"
+              (click)="seleccionarLetra(letra)">
+              {{ letra }}
+            </button>
+          }
+        </div>
+
+        <!-- Letras usadas -->
+        <div class="mt-4 text-center">
+          <p class="text-secondary small">Letras intentadas: {{ letrasUsadas.join(', ') || '-' }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

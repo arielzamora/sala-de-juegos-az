@@ -1,0 +1,74 @@
+<div class="container py-4 d-flex flex-column align-items-center">
+  <div class="w-100" style="max-width: 500px;">
+    <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3 mb-4">
+      ← Volver al Inicio
+    </a>
+  </div>
+  <div class="premium-card p-4 text-center" style="max-width: 500px; width: 100%;">
+    <h2 class="fw-bold text-gradient mb-1">Mayor o Menor</h2>
+    <p class="text-secondary mb-4">Ronda {{ rondaActual }} de {{ TOTAL_RONDAS }} · Aciertos: {{ aciertos }}</p>
+
+    <!-- Área de cartas -->
+    <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+      
+      <!-- Carta actual -->
+      <div class="carta-wrapper">
+        <p class="text-secondary small mb-1">Carta actual</p>
+        @if (cartaActual) {
+          <img [src]="cartaActual.imagen" class="carta-img" [alt]="cartaActual.nombre">
+          <p class="text-white small mt-1">{{ cartaActual.nombre }}</p>
+        }
+      </div>
+
+      <!-- Símbolo central -->
+      <div class="text-center">
+        @if (!mostrarSiguiente) {
+          <span class="fs-1">❓</span>
+        } @else {
+          <span class="fs-1" [class.text-success]="resultado === 'correcto'" [class.text-danger]="resultado === 'incorrecto'">
+            {{ resultado === 'correcto' ? '✅' : '❌' }}
+          </span>
+        }
+      </div>
+
+      <!-- Carta siguiente -->
+      <div class="carta-wrapper">
+        <p class="text-secondary small mb-1">Siguiente</p>
+        @if (!mostrarSiguiente) {
+          <img [src]="BACK_URL" class="carta-img" alt="Reverso">
+        } @else {
+          @if (cartaSiguiente) {
+            <img [src]="cartaSiguiente.imagen" class="carta-img carta-reveal" [alt]="cartaSiguiente.nombre">
+            <p class="text-white small mt-1">{{ cartaSiguiente.nombre }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Botones de elección -->
+    <div class="d-flex gap-3 justify-content-center mb-4">
+      <button class="btn btn-success btn-lg px-4 rounded-pill" 
+              (click)="adivinar('mayor')"
+              [disabled]="mostrarSiguiente || juegoTerminado">
+        Mayor ▲
+      </button>
+      <button class="btn btn-danger btn-lg px-4 rounded-pill"
+              (click)="adivinar('menor')"
+              [disabled]="mostrarSiguiente || juegoTerminado">
+        Menor ▼
+      </button>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress mb-3" style="height: 8px;">
+      <div class="progress-bar bg-info" 
+           [style.width.%]="(rondaActual / TOTAL_RONDAS) * 100">
+      </div>
+    </div>
+    <p class="text-secondary small">{{ rondaActual }}/{{ TOTAL_RONDAS }} rondas jugadas</p>
+
+    <button class="btn btn-outline-secondary rounded-pill px-4 mt-2" (click)="nuevaPartida()">
+      🔄 Nueva Partida
+    </button>
+  </div>
+</div>

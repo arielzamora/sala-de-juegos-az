@@ -1,0 +1,79 @@
+<div class="chat-wrapper container py-4">
+  <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3 mb-3 d-inline-block">
+    ← Volver al Inicio
+  </a>
+  <div class="premium-card d-flex flex-column" style="height: 75vh;">
+
+    <!-- Header del chat -->
+    <div class="chat-header px-4 py-3 border-bottom border-secondary d-flex align-items-center gap-2">
+      <span class="fs-5">💬</span>
+      <div>
+        <h5 class="fw-bold mb-0">Sala de Chat Global</h5>
+        <small class="text-secondary">{{ mensajes.length }} mensajes · Chat en tiempo real</small>
+      </div>
+      <span class="ms-auto badge bg-success">En vivo</span>
+    </div>
+
+    <!-- Área de mensajes -->
+    <div class="mensajes-container flex-grow-1 px-4 py-3" #mensajesContainer>
+      @for (msg of mensajes; track msg.id) {
+        <div class="mensaje-wrapper mb-3" [class.mio]="esMio(msg)">
+          
+          @if (!esMio(msg)) {
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <div class="avatar-mini">{{ getUsernameFrom(msg.user_email)[0]?.toUpperCase() }}</div>
+              <span class="text-secondary small fw-bold">{{ getUsernameFrom(msg.user_email) }}</span>
+              <span class="text-secondary" style="font-size: 0.7rem;">
+                {{ msg.created_at | date:'HH:mm' }}
+              </span>
+            </div>
+          }
+
+          <div class="burbuja" [class.burbuja-mia]="esMio(msg)">
+            {{ msg.mensaje }}
+          </div>
+
+          @if (esMio(msg)) {
+            <div class="d-flex justify-content-end">
+              <span class="text-secondary" style="font-size: 0.7rem; margin-top: 4px;">
+                {{ msg.created_at | date:'HH:mm' }}
+              </span>
+            </div>
+          }
+        </div>
+      }
+
+      @if (mensajes.length === 0) {
+        <div class="text-center text-secondary py-5">
+          <span class="fs-1">💬</span>
+          <p class="mt-3">Sé el primero en escribir algo...</p>
+        </div>
+      }
+    </div>
+
+    <!-- Input de mensaje -->
+    <div class="chat-input px-4 py-3 border-top border-secondary">
+      <div class="d-flex gap-2">
+        <input
+          type="text"
+          class="form-control bg-dark text-white border-secondary"
+          placeholder="Escribí un mensaje... (Enter para enviar)"
+          [(ngModel)]="nuevoMensaje"
+          (keydown)="onKeydown($event)"
+          [disabled]="enviando"
+          maxlength="500">
+        <button
+          class="btn btn-primary px-4 rounded-pill"
+          (click)="enviar()"
+          [disabled]="!nuevoMensaje.trim() || enviando">
+          @if (enviando) {
+            <span class="spinner-border spinner-border-sm"></span>
+          } @else {
+            ➤
+          }
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,49 +1,64 @@
-<div class="container h-100 d-flex justify-content-center align-items-center py-5">
-  <div class="premium-card p-5 text-center" style="max-width: 600px; width: 100%;">
-    
+<!-- HERO SECTION -->
+<div class="hero-section py-5 text-center">
+  <div class="container">
     @if (authService.currentUser()) {
-      <div class="mb-4">
-        <h1 class="display-4 fw-bold text-gradient">¡Hola de nuevo, {{ authService.currentUser()?.email }}!</h1>
-        <p class="lead text-secondary mt-3">
-          ¿Qué te gustaría jugar hoy?
-        </p>
-      </div>
-      
-      <div class="d-flex flex-column gap-3 mt-5 align-items-center">
-        <button class="btn btn-primary btn-lg px-4 rounded-pill shadow w-75">Ahorcado</button>
-        <button class="btn btn-info btn-lg px-4 rounded-pill shadow w-75 text-white">Mayor o Menor</button>
-        <button class="btn btn-warning btn-lg px-4 rounded-pill shadow w-75 text-white">Preguntados</button>
-        <button class="btn btn-success btn-lg px-4 rounded-pill shadow w-75">Juego Propio</button>
-        
-        <button (click)="logout()" class="btn btn-outline-danger mt-4 rounded-pill px-4">
-          Cerrar Sesión
-        </button>
-      </div>
+      <h1 class="display-4 fw-bold text-gradient">
+        ¡Hola, {{ authService.currentUser()?.email?.split('@')?.[0] }}! 👋
+      </h1>
+      <p class="lead text-secondary mt-2">Elegí un juego y a divertirse</p>
     } @else {
-      <div class="mb-4">
-        <h1 class="display-4 fw-bold text-gradient">Bienvenido a la Sala de Juegos</h1>
-        <p class="lead text-secondary mt-3">
-          La mejor plataforma para divertirte y desafiar tus habilidades.
-          Inicia sesión o regístrate para comenzar a jugar.
-        </p>
-      </div>
-      
-      <div class="d-flex gap-3 justify-content-center mt-5">
-        <a routerLink="/login" class="btn btn-primary btn-lg px-4 rounded-pill shadow">
-          Iniciar Sesión
-        </a>
-        <a routerLink="/registro" class="btn btn-outline-light btn-lg px-4 rounded-pill">
-          Registrarse
-        </a>
+      <h1 class="display-4 fw-bold text-gradient">Sala de Juegos</h1>
+      <p class="lead text-secondary mt-2">
+        Iniciá sesión para comenzar a jugar con todos los juegos disponibles
+      </p>
+      <div class="d-flex gap-3 justify-content-center mt-4">
+        <a routerLink="/login" class="btn btn-primary btn-lg rounded-pill px-4">Iniciar Sesión</a>
+        <a routerLink="/registro" class="btn btn-outline-light btn-lg rounded-pill px-4">Registrarse</a>
       </div>
     }
   </div>
 </div>
 
-<style>
-  .text-gradient {
-    background: linear-gradient(45deg, #007bff, #00ff88);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+<!-- GAME CARDS GRID -->
+<div class="container pb-5">
+  <h2 class="text-center text-secondary fw-light mb-4 fs-5 text-uppercase letter-spacing">
+    Juegos disponibles
+  </h2>
+
+  <div class="row g-4 justify-content-center">
+    @for (juego of juegos; track juego.ruta) {
+      <div class="col-sm-6 col-lg-3">
+        <div class="game-card" 
+          [class.game-card-disabled]="juego.deshabilitado"
+          (click)="!juego.deshabilitado && navegar(juego.ruta)" 
+          [style.--accent]="juego.color">
+          <!-- Imagen -->
+          <div class="game-card-img-wrapper">
+            <img [src]="juego.imagen" [alt]="juego.titulo" class="game-card-img">
+            <div class="game-card-overlay">
+              <span class="play-btn">
+                @if (juego.deshabilitado) { 🔒 Próximamente }
+                @else if (authService.currentUser()) { ▶ Jugar }
+                @else { 🔒 Iniciar sesión }
+              </span>
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="game-card-body">
+            <h5 class="fw-bold mb-1">{{ juego.emoji }} {{ juego.titulo }}</h5>
+            <p class="text-secondary small mb-0">{{ juego.descripcion }}</p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Logout si está logueado -->
+  @if (authService.currentUser()) {
+    <div class="text-center mt-5">
+      <button (click)="logout()" class="btn btn-outline-danger rounded-pill px-4">
+        Cerrar Sesión
+      </button>
+    </div>
   }
-</style>
+</div>

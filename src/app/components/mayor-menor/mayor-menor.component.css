@@ -1,0 +1,32 @@
+.carta-img {
+  width: 110px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.carta-img:hover {
+  transform: scale(1.05);
+}
+
+.carta-reveal {
+  animation: flipIn 0.4s ease;
+}
+
+@keyframes flipIn {
+  from {
+    opacity: 0;
+    transform: rotateY(90deg) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+  }
+}
+
+.carta-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
