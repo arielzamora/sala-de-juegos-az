@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { JuegosService } from '../../services/juegos.service';
 import Swal from 'sweetalert2';
+import { TablaResultadosComponent, ColumnaTabla } from '../tabla-resultados/tabla-resultados.component';
 
 @Component({
   selector: 'app-ahorcado',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TablaResultadosComponent],
   templateUrl: './ahorcado.component.html',
   styleUrl: './ahorcado.component.css'
 })
@@ -30,6 +31,18 @@ export class AhorcadoComponent implements OnInit, OnDestroy {
   intentosRestantes: number = this.MAX_INTENTOS;
   juegoTerminado: boolean = false;
   tiempoInicio!: Date;
+  puntaje: number = 60;
+
+  // Modal Resultados
+  mostrarResultados: boolean = false;
+  resultados: any[] = [];
+  columnas: ColumnaTabla[] = [
+    { key: 'user_email', label: 'Jugador', type: 'email' },
+    { key: 'gano', label: 'Resultado', type: 'boolean' },
+    { key: 'tiempo_segundos', label: 'Tiempo (s)' },
+    { key: 'puntaje', label: 'Puntaje' },
+    { key: 'created_at', label: 'Fecha', type: 'date' }
+  ];
 
   get palabraMostrada(): string[] {
     return this.palabra.split('').map(l => this.letrasUsadas.includes(l) ? l : '_');
@@ -49,12 +62,22 @@ export class AhorcadoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
+  async abrirResultados() {
+    try {
+      this.resultados = await this.juegosService.getResultadosAhorcado();
+      this.mostrarResultados = true;
+    } catch (e) {
+      console.error('Error cargando ranking', e);
+    }
+  }
+
   nuevaPartida() {
     this.palabra = this.PALABRAS[Math.floor(Math.random() * this.PALABRAS.length)];
     this.letrasUsadas = [];
     this.intentosRestantes = this.MAX_INTENTOS;
     this.juegoTerminado = false;
     this.tiempoInicio = new Date();
+    this.puntaje = 60;
   }
 
   async seleccionarLetra(letra: string) {
@@ -72,7 +95,15 @@ export class AhorcadoComponent implements OnInit, OnDestroy {
     }
   }
 
+  sumarPuntos() {
+    this.puntaje = 60 - (this.errores * 10);
+    // Asegurarse de que no baje de 0
+    if (this.puntaje < 0) this.puntaje = 0;
+  }
+
   private async finalizarPartida() {
+    this.sumarPuntos();
+
     const tiempoSegundos = Math.floor((new Date().getTime() - this.tiempoInicio.getTime()) / 1000);
     const user = this.authService.currentUser();
 
@@ -84,7 +115,8 @@ export class AhorcadoComponent implements OnInit, OnDestroy {
           palabra: this.palabra,
           letras_usadas: this.letrasUsadas,
           gano: this.gano,
-          tiempo_segundos: tiempoSegundos
+          tiempo_segundos: tiempoSegundos,
+          puntaje: this.puntaje
         });
       } catch (e) {
         console.error('Error guardando partida', e);

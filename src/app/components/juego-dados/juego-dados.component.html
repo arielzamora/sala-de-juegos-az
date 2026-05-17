@@ -1,7 +1,12 @@
 <div class="container py-4">
-  <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3 mb-4">
-    ← Volver al Inicio
-  </a>
+  <div class="d-flex justify-content-between mb-4">
+    <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3">
+      ← Volver al Inicio
+    </a>
+    <button class="btn btn-success rounded-pill px-4 fw-bold" (click)="abrirResultados()">
+      🏆 Ranking
+    </button>
+  </div>
 
   <div class="row justify-content-center">
     <div class="col-md-7 col-lg-6">
@@ -56,15 +61,18 @@
           </div>
         </div>
 
-        <!-- Indicador de intentos -->
-        <div class="d-flex justify-content-center gap-2 mb-4">
-          @for (t of [0, 1, 2]; track t) {
-            <div class="intento-burbuja"
-              [class.usado]="intentos.length > t && intentos[t]?.suma !== 7"
-              [class.ganador]="intentos[t]?.suma === 7">
-              {{ t + 1 }}
-            </div>
-          }
+        <!-- Indicador de Vidas y Puntaje -->
+        <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+          <div class="vidas d-flex gap-1">
+            @for (t of [1, 2, 3]; track t) {
+              <span class="fs-4" [class.text-danger]="t <= (MAX_INTENTOS - intentos.length)" [class.text-secondary]="t > (MAX_INTENTOS - intentos.length)">
+                {{ t <= (MAX_INTENTOS - intentos.length) ? '❤️' : '🖤' }}
+              </span>
+            }
+          </div>
+          <div class="puntaje bg-dark rounded-pill px-3 py-1 border border-secondary">
+            <span class="text-info fw-bold">Puntaje: {{ gano || juegoTerminado ? puntaje : (30 - intentos.length * 10) }}</span>
+          </div>
         </div>
 
         <!-- Botón tirar -->
@@ -104,5 +112,19 @@
 
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal Resultados -->
+<div *ngIf="mostrarResultados" class="modal-overlay">
+  <div class="modal-content-custom bg-dark border-success">
+    <button class="btn-close-modal text-white" (click)="mostrarResultados = false">❌</button>
+    <app-tabla-resultados 
+      titulo="Ranking Dados" 
+      icono="🎲" 
+      colorClass="success" 
+      [datos]="resultados" 
+      [columnas]="columnas">
+    </app-tabla-resultados>
   </div>
 </div>

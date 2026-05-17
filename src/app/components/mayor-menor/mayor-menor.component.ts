@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { JuegosService } from '../../services/juegos.service';
 import Swal from 'sweetalert2';
+import { TablaResultadosComponent, ColumnaTabla } from '../tabla-resultados/tabla-resultados.component';
 
 interface Carta {
   palo: string;    // coins, cups, swords, clubs
@@ -15,7 +16,7 @@ interface Carta {
 @Component({
   selector: 'app-mayor-menor',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TablaResultadosComponent],
   templateUrl: './mayor-menor.component.html',
   styleUrl: './mayor-menor.component.css'
 })
@@ -32,7 +33,7 @@ export class MayorMenorComponent implements OnInit {
     { key: 'clubs', nombre: 'Bastos' }
   ];
   readonly VALORES = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12];
-  readonly TOTAL_RONDAS = 10;
+  readonly TOTAL_RONDAS = 39; // 40 cartas en total = 39 intentos
 
   baraja: Carta[] = [];
   cartaActual: Carta | null = null;
@@ -43,9 +44,29 @@ export class MayorMenorComponent implements OnInit {
   aciertos: number = 0;
   rondaActual: number = 0;
   juegoTerminado: boolean = false;
+  puntaje: number = 50;
+
+  mostrarResultados: boolean = false;
+  resultados: any[] = [];
+  columnas: ColumnaTabla[] = [
+    { key: 'user_email', label: 'Jugador', type: 'email' },
+    { key: 'cartas_acertadas', label: 'Acertadas' },
+    { key: 'total_cartas', label: 'Total' },
+    { key: 'puntaje', label: 'Puntaje' },
+    { key: 'created_at', label: 'Fecha', type: 'date' }
+  ];
 
   ngOnInit() {
     this.nuevaPartida();
+  }
+
+  async abrirResultados() {
+    try {
+      this.resultados = await this.juegosService.getResultadosMayorMenor();
+      this.mostrarResultados = true;
+    } catch (e) {
+      console.error('Error cargando ranking', e);
+    }
   }
 
   private generarBaraja(): Carta[] {
@@ -78,6 +99,7 @@ export class MayorMenorComponent implements OnInit {
     this.mostrarSiguiente = false;
     this.cartaActual = this.baraja[this.rondaActual];
     this.cartaSiguiente = this.baraja[this.rondaActual + 1];
+    this.puntaje = 50;
   }
 
   async adivinar(eleccion: 'mayor' | 'menor') {
@@ -94,6 +116,7 @@ export class MayorMenorComponent implements OnInit {
 
     this.resultado = acerto ? 'correcto' : 'incorrecto';
     if (acerto) this.aciertos++;
+    this.sumarPuntos(acerto);
     this.mostrarSiguiente = true;
     this.rondaActual++;
 
@@ -109,6 +132,15 @@ export class MayorMenorComponent implements OnInit {
     }
   }
 
+  sumarPuntos(acerto: boolean) {
+    if (acerto) {
+      this.puntaje += 10;
+    } else {
+      this.puntaje -= 10;
+      if (this.puntaje < 0) this.puntaje = 0;
+    }
+  }
+
   private async finalizarPartida() {
     this.juegoTerminado = true;
     const user = this.authService.currentUser();
@@ -119,7 +151,8 @@ export class MayorMenorComponent implements OnInit {
           user_id: user.id,
           user_email: user.email || '',
           cartas_acertadas: this.aciertos,
-          total_cartas: this.TOTAL_RONDAS
+          total_cartas: this.TOTAL_RONDAS,
+          puntaje: this.puntaje
         });
       } catch (e) {
         console.error('Error guardando partida', e);
@@ -128,8 +161,8 @@ export class MayorMenorComponent implements OnInit {
 
     Swal.fire({
       background: '#1e1e1e', color: '#fff',
-      icon: this.aciertos >= 7 ? 'success' : 'info',
-      title: `¡Juego terminado! ${this.aciertos >= 7 ? '🏆' : '🎴'}`,
+      icon: this.aciertos >= (this.TOTAL_RONDAS / 2) ? 'success' : 'info',
+      title: `¡Juego terminado! ${this.aciertos >= (this.TOTAL_RONDAS / 2) ? '🏆' : '🎴'}`,
       html: `Acertaste <b>${this.aciertos} de ${this.TOTAL_RONDAS}</b> cartas`,
       confirmButtonText: 'Jugar de nuevo',
       confirmButtonColor: '#007bff',

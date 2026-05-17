@@ -18,3 +18,41 @@ body {
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   color: white;
 }
+
+/* MODAL RESULTADOS GLOBAL */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  backdrop-filter: blur(5px);
+}
+.modal-content-custom {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 2px solid;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+}
+.btn-close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.btn-close-modal:hover {
+  opacity: 1;
+}

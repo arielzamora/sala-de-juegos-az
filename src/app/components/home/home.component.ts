@@ -29,7 +29,7 @@ export class HomeComponent {
       descripcion: 'Adiviná la palabra oculta letra por letra antes de que se complete la figura. ¡Tenés 6 intentos!',
       emoji: '💀',
       imagen: 'assets/games/ahorcado.png',
-      ruta: '/ahorcado',
+      ruta: '/juegos/ahorcado',
       color: '#007bff'
     },
     {
@@ -37,7 +37,7 @@ export class HomeComponent {
       descripcion: 'Predecí si la siguiente carta de la baraja española será mayor o menor que la actual. 10 rondas.',
       emoji: '🃏',
       imagen: 'assets/games/mayor-menor.png',
-      ruta: '/mayor-menor',
+      ruta: '/juegos/mayor-menor',
       color: '#17a2b8'
     },
     {
@@ -45,17 +45,16 @@ export class HomeComponent {
       descripcion: 'Tirá 2 dados e intentá obtener una suma de 7. Solo tenés 3 intentos para lograrlo.',
       emoji: '🎲',
       imagen: 'assets/games/dados.png',
-      ruta: '/juego-dados',
+      ruta: '/juegos/juego-dados',
       color: '#28a745'
     },
     {
       titulo: 'Preguntados',
-      descripcion: 'Poné a prueba tu conocimiento respondiendo preguntas de múltiples categorías. ¡Próximamente!',
+      descripcion: 'Poné a prueba tu conocimiento respondiendo 10 preguntas trivia en inglés.',
       emoji: '❓',
       imagen: 'assets/games/preguntados.png',
-      ruta: '',
-      color: '#fd7e14',
-      deshabilitado: true
+      ruta: '/juegos/preguntados',
+      color: '#fd7e14'
     },
     {
       titulo: 'Sala de Chat',

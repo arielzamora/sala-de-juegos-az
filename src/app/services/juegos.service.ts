@@ -22,6 +22,7 @@ export class JuegosService {
     letras_usadas: string[];
     gano: boolean;
     tiempo_segundos: number;
+    puntaje: number;
   }) {
     const { error } = await this.supabase
       .from('partidas_ahorcado')
@@ -37,6 +38,7 @@ export class JuegosService {
     user_email: string;
     cartas_acertadas: number;
     total_cartas: number;
+    puntaje: number;
   }) {
     const { error } = await this.supabase
       .from('partidas_mayor_menor')
@@ -52,6 +54,7 @@ export class JuegosService {
     user_email: string;
     gano: boolean;
     intentos_usados: number;
+    puntaje: number;
     resultados: { dado1: number; dado2: number; suma: number }[];
   }) {
     const { error } = await this.supabase
@@ -95,5 +98,67 @@ export class JuegosService {
         (payload) => callback(payload.new)
       )
       .subscribe();
+  }
+
+  // ============================================================
+  // PREGUNTADOS
+  // ============================================================
+  async guardarPartidaPreguntados(data: {
+    user_id: string;
+    user_email: string;
+    preguntas_acertadas: number;
+    total_preguntas: number;
+    puntaje: number;
+  }) {
+    const { error } = await this.supabase
+      .from('partidas_preguntados')
+      .insert(data);
+    if (error) throw error;
+  }
+
+  // ============================================================
+  // RESULTADOS (RANKINGS)
+  // ============================================================
+  async getResultadosAhorcado() {
+    const { data, error } = await this.supabase
+      .from('partidas_ahorcado')
+      .select('*')
+      .order('puntaje', { ascending: false })
+      .order('gano', { ascending: false })
+      .order('tiempo_segundos', { ascending: true })
+      .limit(20);
+    if (error) throw error;
+    return data;
+  }
+
+  async getResultadosMayorMenor() {
+    const { data, error } = await this.supabase
+      .from('partidas_mayor_menor')
+      .select('*')
+      .order('puntaje', { ascending: false })
+      .limit(20);
+    if (error) throw error;
+    return data;
+  }
+
+  async getResultadosDados() {
+    const { data, error } = await this.supabase
+      .from('partidas_dados')
+      .select('*')
+      .order('puntaje', { ascending: false })
+      .order('gano', { ascending: false })
+      .limit(20);
+    if (error) throw error;
+    return data;
+  }
+
+  async getResultadosPreguntados() {
+    const { data, error } = await this.supabase
+      .from('partidas_preguntados')
+      .select('*')
+      .order('puntaje', { ascending: false })
+      .limit(20);
+    if (error) throw error;
+    return data;
   }
 }

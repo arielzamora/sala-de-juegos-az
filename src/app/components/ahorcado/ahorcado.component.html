@@ -1,7 +1,12 @@
 <div class="container py-4">
-  <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3 mb-4">
-    ← Volver al Inicio
-  </a>
+  <div class="d-flex justify-content-between mb-4">
+    <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3">
+      ← Volver al Inicio
+    </a>
+    <button class="btn btn-primary rounded-pill px-4 fw-bold" (click)="abrirResultados()">
+      🏆 Ranking
+    </button>
+  </div>
   <div class="row g-4 justify-content-center">
     
     <!-- Panel izquierdo: SVG del ahorcado + palabra -->
@@ -43,12 +48,15 @@
         </svg>
 
         <!-- Intentos restantes -->
-        <p class="text-secondary mt-2">
+        <p class="text-secondary mt-2 mb-1">
           Intentos restantes: 
           <span class="fw-bold" [class.text-danger]="intentosRestantes <= 2" [class.text-warning]="intentosRestantes === 3" [class.text-success]="intentosRestantes > 3">
             {{ intentosRestantes }} / {{ MAX_INTENTOS }}
           </span>
         </p>
+        <div class="puntaje bg-dark rounded-pill px-3 py-1 border border-secondary d-inline-block mt-2">
+          <span class="text-info fw-bold">Puntaje: {{ gano || juegoTerminado ? puntaje : (60 - errores * 10) }}</span>
+        </div>
 
         <!-- Palabra oculta -->
         <div class="palabra-container d-flex justify-content-center gap-2 flex-wrap my-4">
@@ -90,5 +98,19 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- Modal Resultados -->
+<div *ngIf="mostrarResultados" class="modal-overlay">
+  <div class="modal-content-custom bg-dark border-primary">
+    <button class="btn-close-modal text-white" (click)="mostrarResultados = false">❌</button>
+    <app-tabla-resultados 
+      titulo="Ranking Ahorcado" 
+      icono="💀" 
+      colorClass="primary" 
+      [datos]="resultados" 
+      [columnas]="columnas">
+    </app-tabla-resultados>
   </div>
 </div>

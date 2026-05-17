@@ -36,24 +36,26 @@
     <!-- Documentación Juego Propio -->
     <div class="col-md-7">
       <div class="premium-card p-4 h-100 text-start">
-        <h3 class="mb-4 text-gradient">Juego Propio: [Nombre del Juego]</h3>
+        <h3 class="mb-4 text-gradient">Juego Propio: Juego de Dados</h3>
         
         <div class="documentation-placeholder">
           <h5 class="fw-bold text-info mt-4">Descripción</h5>
           <p class="text-secondary mb-4">
-            [Placeholder] Describe aquí brevemente de qué trata tu juego. ¿Cuál es el objetivo principal y cómo se gana?
+            El Juego de Dados es un juego de azar donde el jugador debe lanzar dos dados y conseguir que la suma de sus caras sea exactamente 7. El jugador tiene un número limitado de intentos para ganar la partida.
           </p>
 
           <h5 class="fw-bold text-info">Reglas del Juego</h5>
           <ul class="text-secondary mb-4 list-group list-group-flush bg-transparent">
-            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">1. [Regla 1: ej. El jugador debe...]</li>
-            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">2. [Regla 2: ej. Si sucede X, entonces Y...]</li>
-            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">3. [Regla 3: ej. El juego termina cuando...]</li>
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">1. Al iniciar la partida, el jugador tiene 3 intentos en total.</li>
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">2. En cada intento, el jugador presiona el botón "Tirar" y ambos dados girarán de forma aleatoria.</li>
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">3. Si la suma de los dados es exactamente 7, el jugador gana la partida inmediatamente.</li>
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">4. Si después de los 3 intentos el jugador no logra sacar 7, pierde la partida.</li>
+            <li class="list-group-item bg-transparent text-secondary border-secondary px-0">5. Al finalizar la partida, se guardará en la base de datos si ganó o perdió y el número de intentos utilizados.</li>
           </ul>
 
           <h5 class="fw-bold text-info mt-4">Detalles Técnicos</h5>
           <p class="text-secondary">
-            [Placeholder] Menciona brevemente si utilizaste alguna estructura de datos particular, animaciones, o lógica especial para implementar este juego en Angular 17+ y Standalone Components.
+            Este juego está desarrollado utilizando Angular Standalone Components. Se implementó una lógica de renderizado dinámico con CSS Grid para dibujar las caras de los dados (los puntos) sin necesidad de imágenes externas, utilizando matrices booleanas. Además, incluye animaciones de sacudida y retardos asíncronos (`async`/`await`) para generar expectativa al lanzar los dados.
           </p>
         </div>
       </div>

@@ -1,12 +1,18 @@
 <div class="container py-4 d-flex flex-column align-items-center">
-  <div class="w-100" style="max-width: 500px;">
-    <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3 mb-4">
+  <div class="w-100 d-flex justify-content-between mb-4" style="max-width: 500px;">
+    <a routerLink="/home" class="btn btn-outline-secondary rounded-pill px-3">
       ← Volver al Inicio
     </a>
+    <button class="btn btn-info rounded-pill px-4 fw-bold text-dark" (click)="abrirResultados()">
+      🏆 Ranking
+    </button>
   </div>
   <div class="premium-card p-4 text-center" style="max-width: 500px; width: 100%;">
     <h2 class="fw-bold text-gradient mb-1">Mayor o Menor</h2>
-    <p class="text-secondary mb-4">Ronda {{ rondaActual }} de {{ TOTAL_RONDAS }} · Aciertos: {{ aciertos }}</p>
+    <p class="text-secondary mb-2">Ronda {{ rondaActual }} de {{ TOTAL_RONDAS }} · Aciertos: {{ aciertos }}</p>
+    <div class="puntaje bg-dark rounded-pill px-3 py-1 border border-secondary d-inline-block mb-4">
+      <span class="text-info fw-bold">Puntaje: {{ puntaje }}</span>
+    </div>
 
     <!-- Área de cartas -->
     <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
@@ -71,4 +77,18 @@
       🔄 Nueva Partida
     </button>
   </div>
+
+<!-- Modal Resultados -->
+<div *ngIf="mostrarResultados" class="modal-overlay">
+  <div class="modal-content-custom bg-dark border-info">
+    <button class="btn-close-modal text-white" (click)="mostrarResultados = false">❌</button>
+    <app-tabla-resultados 
+      titulo="Ranking Mayor o Menor" 
+      icono="🃏" 
+      colorClass="info" 
+      [datos]="resultados" 
+      [columnas]="columnas">
+    </app-tabla-resultados>
+  </div>
+</div>
 </div>

@@ -1,0 +1,80 @@
+<div class="juego-container">
+  <header class="header">
+    <div class="d-flex justify-content-between w-100 mb-2">
+      <a routerLink="/home" class="btn-volver">← Volver</a>
+      <button class="btn btn-warning rounded-pill px-4 fw-bold text-dark" (click)="abrirResultados()">🏆 Ranking</button>
+    </div>
+    <h1>Preguntados 🧠</h1>
+    <p class="subtitle">¡Demuestra cuánto sabes!</p>
+  </header>
+
+  <div class="game-area">
+    <div *ngIf="cargando" class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando preguntas...</p>
+    </div>
+
+    <div *ngIf="error" class="error-state">
+      <p class="text-danger">⚠️ {{ error }}</p>
+      <button class="btn btn-primary mt-3" (click)="cargarPreguntas()">Reintentar</button>
+    </div>
+
+    <div *ngIf="!cargando && !error && !juegoTerminado && preguntas.length > 0" class="question-card">
+      <div class="progress-info">
+        <span class="badge bg-secondary">{{ preguntaActual.category }}</span>
+        <span class="text-muted">Pregunta {{ preguntaActualIndex + 1 }} / {{ preguntas.length }}</span>
+      </div>
+
+      <h3 class="question-text">{{ preguntaActual.question }}</h3>
+
+      <div class="options-grid">
+        <button *ngFor="let opcion of preguntaActual.options" 
+                class="btn-opcion"
+                [disabled]="respondido"
+                [ngClass]="{
+                  'correcta': respondido && opcion === preguntaActual.correct_answer,
+                  'incorrecta': respondido && opcion === opcionSeleccionada && opcion !== preguntaActual.correct_answer,
+                  'seleccionada': respondido && opcion === opcionSeleccionada
+                }"
+                (click)="seleccionarOpcion(opcion)">
+          {{ opcion }}
+        </button>
+      </div>
+
+      <div class="stats mt-4 text-center text-light d-flex justify-content-between align-items-center">
+        <div>
+          <span class="fs-4 me-2">
+            @for (t of [1, 2, 3]; track t) {
+              <span [class.text-danger]="t <= vidas" [class.text-secondary]="t > vidas">
+                {{ t <= vidas ? '❤️' : '🖤' }}
+              </span>
+            }
+          </span>
+        </div>
+        <div class="puntaje bg-dark rounded-pill px-3 py-1 border border-secondary">
+          <span class="text-warning fw-bold">Puntaje: {{ puntaje }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="juegoTerminado" class="finished-state">
+      <h2>¡Partida Finalizada!</h2>
+      <p>Puntaje final: {{ puntaje }} puntos</p>
+      <button class="btn btn-success btn-lg mt-3" (click)="cargarPreguntas()">Jugar Otra Vez</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Resultados -->
+<div *ngIf="mostrarResultados" class="modal-overlay">
+  <div class="modal-content-custom bg-dark border-warning">
+    <button class="btn-close-modal text-white" (click)="mostrarResultados = false">❌</button>
+    <app-tabla-resultados 
+      titulo="Ranking Preguntados" 
+      icono="❓" 
+      colorClass="warning" 
+      [datos]="resultados" 
+      [columnas]="columnas">
+    </app-tabla-resultados>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { JuegosService } from '../../services/juegos.service';
 import Swal from 'sweetalert2';
+import { TablaResultadosComponent, ColumnaTabla } from '../tabla-resultados/tabla-resultados.component';
 
 interface Tirada {
   dado1: number;
@@ -14,7 +15,7 @@ interface Tirada {
 @Component({
   selector: 'app-juego-dados',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TablaResultadosComponent],
   templateUrl: './juego-dados.component.html',
   styleUrl: './juego-dados.component.css'
 })
@@ -31,6 +32,17 @@ export class JuegoDadosComponent {
   intentos: Tirada[] = [];
   juegoTerminado: boolean = false;
   gano: boolean = false;
+  puntaje: number = 30;
+
+  mostrarResultados: boolean = false;
+  resultados: any[] = [];
+  columnas: ColumnaTabla[] = [
+    { key: 'user_email', label: 'Jugador', type: 'email' },
+    { key: 'gano', label: 'Resultado', type: 'boolean' },
+    { key: 'intentos_usados', label: 'Intentos' },
+    { key: 'puntaje', label: 'Puntaje' },
+    { key: 'created_at', label: 'Fecha', type: 'date' }
+  ];
 
   // Distribución de 9 celdas (grid 3x3) para cada cara del dado
   private readonly DOT_LAYOUTS: boolean[][] = [
@@ -45,6 +57,15 @@ export class JuegoDadosComponent {
 
   getDots(valor: number): boolean[] {
     return this.DOT_LAYOUTS[valor] || this.DOT_LAYOUTS[1];
+  }
+
+  async abrirResultados() {
+    try {
+      this.resultados = await this.juegosService.getResultadosDados();
+      this.mostrarResultados = true;
+    } catch (e) {
+      console.error('Error cargando ranking', e);
+    }
   }
 
   get intentosRestantes(): number {
@@ -81,7 +102,21 @@ export class JuegoDadosComponent {
     }
   }
 
+  sumarPuntos() {
+    if (this.gano) {
+      // Por cada intento fallido (los intentos anteriores al ganador), restamos 10 puntos.
+      // Si ganó en el 1er intento (intentos.length = 1), descuenta 0 -> puntaje 30.
+      // Si ganó en el 2do intento, descuenta 10 -> puntaje 20.
+      // Si ganó en el 3er intento, descuenta 20 -> puntaje 10.
+      this.puntaje = 30 - ((this.intentos.length - 1) * 10);
+    } else {
+      this.puntaje = 0;
+    }
+  }
+
   private async finalizarPartida() {
+    this.sumarPuntos();
+
     const user = this.authService.currentUser();
     if (user) {
       try {
@@ -90,6 +125,7 @@ export class JuegoDadosComponent {
           user_email: user.email || '',
           gano: this.gano,
           intentos_usados: this.intentos.length,
+          puntaje: this.puntaje,
           resultados: this.intentos
         });
       } catch (e) {
@@ -125,6 +161,7 @@ export class JuegoDadosComponent {
     this.juegoTerminado = false;
     this.gano = false;
     this.animando = false;
+    this.puntaje = 30;
   }
 
   private randomDado(): number {
