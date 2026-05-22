@@ -59,11 +59,11 @@ export class LoginComponent {
 
   fastLogin(type: string) {
     if (type === 'admin') {
-      this.loginForm.setValue({ email: 'admin@admin.com', pass: '111111' });
+      this.loginForm.setValue({ email: 'admin@admin.com', pass: '123456' });
     } else if (type === 'invitado') {
-      this.loginForm.setValue({ email: 'invitado@invitado.com', pass: '222222' });
+      this.loginForm.setValue({ email: 'invitado@invitado.com', pass: '123456' });
     } else if (type === 'tester') {
-      this.loginForm.setValue({ email: 'tester@tester.com', pass: '333333' });
+      this.loginForm.setValue({ email: 'tester@tester.com', pass: '123456' });
     }
   }
 }

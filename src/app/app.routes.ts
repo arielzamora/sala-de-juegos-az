@@ -16,12 +16,10 @@ export const routes: Routes = [
   { path: 'resultados', component: ResultadosComponent },
 
   // Rutas protegidas por AuthGuard
-  // Rutas protegidas por AuthGuard
-  { path: 'chat',         component: ChatComponent,        canActivate: [authGuard] },
-  
+  { path: 'chat', component: ChatComponent, canActivate: [authGuard] },
   // Módulo de juegos con Lazy Loading
-  { 
-    path: 'juegos', 
+  {
+    path: 'juegos',
     canActivate: [authGuard],
     loadChildren: () => import('./juegos/juegos.module').then(m => m.JuegosModule)
   },
